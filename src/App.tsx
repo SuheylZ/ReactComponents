@@ -8,7 +8,10 @@ function App() {
 
   return (
     <>
-     Controls
+      <div className='text-red-400 text-xl'>
+        Controls
+      </div>
+
     </>
   )
 }
