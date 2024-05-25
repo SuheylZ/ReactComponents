@@ -1,18 +1,10 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-
-
   return (
-    <>
-      <div className='text-red-400 text-xl'>
+    <div className='text-red-400 text-xl font-bold'>
         Controls
-      </div>
-
-    </>
+    </div>
   )
 }
 
