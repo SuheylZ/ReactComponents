@@ -47,7 +47,7 @@ export function Card(props: CardProps) {
   const { columnId } = props._data as { columnId: Identity }
 
   return (
-    <Box className="w-60 max-h-64 min-h-8 z-50 flex flex-col rounded-md shadow-lg border border-slate-600  bg-slate-200 shadow-slate-600">
+    <Box className="w-60 max-h-64 min-h-8 z-50 flex flex-col rounded-md shadow-lg border border-slate-300  bg-slate-200 shadow-slate-600">
 
       <div
         onDoubleClick={() => props.onDoubleClick?.(props.id)}

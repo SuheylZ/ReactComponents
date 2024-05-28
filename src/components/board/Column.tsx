@@ -3,16 +3,28 @@ import { Box } from "../Box"
 import { Card, CardProps } from "./Card"
 import { DragData, DragKey, Identity, ItemData } from "./interfaces"
 
+export enum States {
+  Red,
+  Blue,
+  Green,
+  Yellow,
+  Orange,
+  Black
+}
+export function isBoardColumn(obj: JSX.Element | null | undefined): obj is React.ReactElement<ColumnProps> {
+  const columnType = (<BoardColumn id={undefined} title={""} />).type
+  return obj !== null && obj !== undefined && obj.type === columnType
+}
 
 
-export type ColumnTitleProps = {
+
+export type TitleProps = {
   id: Identity,
   title?: string | undefined,
   state?: States
   onDoubleClick?: (id: Identity) => void
 }
-
-export function ColumnTitle(props: ColumnTitleProps) {
+export function Title(props: TitleProps) {
 
   const stateColors = useMemo(() => new Map<States, string>([
     [States.Blue, "text-blue-700"],
@@ -24,7 +36,7 @@ export function ColumnTitle(props: ColumnTitleProps) {
   ]), [props.state])
 
   return (
-    <Box className={` ${stateColors.get(props.state ?? States.Black)} p-1 pl-2 text-left font-bold text-sm border bg-slate-300 border-gray-400`}>
+    <Box className={` ${stateColors.get(props.state ?? States.Black)} p-1 pl-2 text-left font-bold text-sm border bg-slate-300 border-gray-200`}>
       <div onDoubleClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -37,19 +49,17 @@ export function ColumnTitle(props: ColumnTitleProps) {
 }
 
 
-
-export type ColumnContentProps = {
+export type ContentProps = {
   children?: JSX.Element | JSX.Element[],
   columnId: Identity
   onItemMoved?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
   redraw?: () => void
 }
-
-export function ColumnContent(props: ColumnContentProps) {
+export function Content(props: ContentProps) {
   const { children } = props
 
   return (
-    <Box className={`w-full h-full min-h-max flex-grow  p-1`}
+    <Box className={`w-full h-full flex-grow min-h-max p-1 space-y-2`}
       onDrop={(e) => {
         const data = JSON.parse(e.dataTransfer.getData(DragKey)) as DragData
         if (data.columnId !== props.columnId) {
@@ -64,14 +74,7 @@ export function ColumnContent(props: ColumnContentProps) {
   )
 }
 
-export enum States {
-  Red,
-  Blue,
-  Green,
-  Yellow,
-  Orange,
-  Black
-}
+
 
 export type ColumnProps = {
   id: Identity
@@ -98,24 +101,19 @@ export type ColumnProps = {
  */
   _redraw?: object
 }
-
-export function isBoardColumn(obj: JSX.Element | null | undefined): obj is React.ReactElement<ColumnProps> {
-  const columnType = (<BoardColumn id={undefined} title={""} />).type
-  return obj !== null && obj !== undefined && obj.type === columnType
-}
-
 export function BoardColumn(props: ColumnProps) {
   const { id, title, onDoubleClick, _onItemClicked, _redraw } = props
   const items = (props._data as ItemData[])?.filter(x => x.columnId === props.id) ?? []
   const onItemMoved = props._onItemMoved as (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
 
   return (
-    <Box className="bg-gray-300 border-gray-500 shadow-lg border w-64 h-fit min-h-full flex flex-col">
-      <ColumnTitle key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onDoubleClick?.(id)} />
-      <ColumnContent columnId={props.id} onItemMoved={(cid, sid, tid) => onItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
+    <Box className="bg-gray-300 border-gray-00 shadow-lg border w-64 h-fit min-h-full flex flex-col ">
+      <Title key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onDoubleClick?.(id)} />
+      <Content columnId={props.id} onItemMoved={(cid, sid, tid) => onItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
         {items.map(x =>
 
-          <Card id={x.id}
+          <Card
+            id={x.id}
             title={x.title}
             detail={x.detail}
             position={x.position}
@@ -128,9 +126,12 @@ export function BoardColumn(props: ColumnProps) {
           />
 
         )}
-      </ColumnContent>
+      </Content>
     </Box>
   )
 }
+
+
+
 
 
