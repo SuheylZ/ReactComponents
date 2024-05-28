@@ -1,10 +1,14 @@
-import { Identity, ItemData } from "./interfaces"
+import { DragKey, Identity, ItemData } from "./interfaces"
 import "../../core.css"
 import { Box } from "../Box"
 
 
 export type CardProps = Omit<ItemData, "columnId"> & {
   onDoubleClick?: (id: Identity) => void
+  /**
+   * Internal Attribute -- DO NOT USE
+   */
+  _data?: object
 }
 
 
@@ -40,6 +44,8 @@ function Tag(props: { tag: string }) {
 }
 
 export function Card(props: CardProps) {
+  const { columnId } = props._data as { columnId: Identity }
+
   return (
     <Box className="w-60 max-h-64 min-h-8 z-50 flex flex-col rounded-md shadow-lg border border-slate-600  bg-slate-200 shadow-slate-600">
 
@@ -47,6 +53,8 @@ export function Card(props: CardProps) {
         onDoubleClick={() => props.onDoubleClick?.(props.id)}
         draggable={true}
         onDragStart={(e) => {
+          const data = JSON.stringify({ cardId: props.id, columnId: columnId })
+          e.dataTransfer.setData(DragKey, data)
           e.dataTransfer.effectAllowed = "linkMove"
           e.dataTransfer.dropEffect = "move"
         }}

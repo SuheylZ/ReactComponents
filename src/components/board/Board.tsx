@@ -1,35 +1,43 @@
 
+import { useMemo, useState } from "react"
+import { BoardColumn, ColumnProps, isBoardColumn } from "./Column"
+import { Identity, ItemData } from "./interfaces"
 import { Box } from "../Box"
-import { BoardColumn, ColumnProps } from "./Column"
-import { IBoardData, IBoardEvents } from "./interfaces"
+
 
 export type BoardProps = {
-  data?: IBoardData
-  events?: IBoardEvents
+  data?: ItemData[]
   children?: JSX.Element | JSX.Element[]
+
+  onDoubleClick?: (id: Identity) => void
+  onItemMoved?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
+  onItemArranged?: (cardId: Identity, position: number) => void
 }
 
+
 export function Board(props: BoardProps) {
+  const [isChanged, setChanged] = useState(false)
+  const childItems = useMemo(() => (props.children === null) || (props.children === undefined) ? [] :
+    Array.isArray(props.children) ? props.children : [props.children], [isChanged])
 
-  const columnType = (<BoardColumn id={undefined} title={""} _data={undefined} />).type
+  const isValid = childItems.every(x => isBoardColumn(x) || true)
+  if (!isValid)
+    throw new Error("only BoardColumn can be added as a child element of Board")
 
-
-  const children = (() => {
-    if (props.children) {
-      if (Array.isArray(props.children) && props.children.every(x => x.type === columnType)) {
-        return props.children.map(x => {
-          const newprops = { ...x.props, _data: props.data } as ColumnProps
-          return < BoardColumn key={newprops.id} {...newprops} />
-        })
-      }
-      else if (!Array.isArray(props.children) && (props.children?.type === columnType)) {
-        const newprops = { ...props, _data: props.data } as ColumnProps
-        return < BoardColumn key={newprops.id} {...newprops} />
-      }
-      else return props.children
-    }
-    else return undefined
-  })()
+  const children = useMemo(() => {
+    return childItems.map(x => {
+      const newprops = {
+        ...x.props,
+        _data: props.data,
+        _onItemClicked: props.onDoubleClick,
+        _onItemMoved: props.onItemMoved,
+        _redraw: () => {
+          setChanged(c => !c)
+        }
+      } as ColumnProps
+      return <BoardColumn key={newprops.id} {...newprops} />
+    })
+  }, [props.children, isChanged])
 
 
   return (

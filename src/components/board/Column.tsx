@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { Box } from "../Box"
 import { Card, CardProps } from "./Card"
-import { IBoardData, Identity } from "./interfaces"
+import { DragData, DragKey, IBoardData, Identity, ItemData } from "./interfaces"
 
 
 
@@ -25,8 +25,12 @@ export function ColumnTitle(props: ColumnTitleProps) {
 
   return (
     <Box className={`bg-slate-300 ${stateColors.get(props.state ?? States.Black)} font-bold text-sm border border-gray-400`}>
-      <div onDoubleClick={() => props.onDoubleClick?.(props.id)} >
-        {props.title ?? "No Title"}
+      <div onDoubleClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        props.onDoubleClick?.(props.id)
+      }} >
+        {props.title}
       </div>
     </Box>
   )
@@ -34,19 +38,26 @@ export function ColumnTitle(props: ColumnTitleProps) {
 
 
 
-export type ColumnContentProps = { children?: JSX.Element | JSX.Element[] }
+export type ColumnContentProps = {
+  children?: JSX.Element | JSX.Element[],
+  columnId: Identity
+  onItemMoved?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
+  redraw?: () => void
+}
 
 export function ColumnContent(props: ColumnContentProps) {
   const { children } = props
-  const [isDropped, setDropped] = useState(false)
 
   return (
-    <Box className={`w-full h-full min-h-max flex-grow ${isDropped ? "bg-blue-700" : ""} p-1`}
+    <Box className={`w-full h-full min-h-max flex-grow  p-1`}
       onDrop={(e) => {
-        //const t0 = e.dataTransfer.getData("card")
-        setDropped(true)
+        const data = JSON.parse(e.dataTransfer.getData(DragKey)) as DragData
+        if (data.columnId !== props.columnId) {
+          props.onItemMoved?.(data.cardId, data.columnId, props.columnId)
+          props.redraw?.()
+        }
       }}
-      onDragOver={e => { }}
+      onDragOver={e => { e.stopPropagation() }}
     >
       {children}
     </Box>
@@ -68,22 +79,58 @@ export type ColumnProps = {
   hint?: string
   state?: States
   items?: CardProps[],
-  onClick?: (id: Identity) => void
-  _data?: IBoardData | undefined
+  onDoubleClick?: (id: Identity) => void
+
+  /**
+   * Internal property-- DO NOT USE
+   */
+  _data?: object
+  /**
+   * Internal property-- DO NOT USE
+   */
+  _onItemClicked?: object
+  /**
+   * Internal property-- DO NOT USE
+   */
+  _onItemMoved?: object
+  /**
+ * Internal property-- DO NOT USE
+ */
+  _redraw?: object
 }
 
+export function isBoardColumn(obj: JSX.Element | null | undefined): obj is React.ReactElement<ColumnProps> {
+  const columnType = (<BoardColumn id={undefined} title={""} />).type
+  return obj !== null && obj !== undefined && obj.type === columnType
+}
 
 export function BoardColumn(props: ColumnProps) {
-  const { id, title, onClick } = props
-  const items = props._data?.items?.filter(x => x.columnId === props.id) ?? []
+  const { id, title, onDoubleClick, _onItemClicked, _redraw } = props
+  const items = (props._data as ItemData[])?.filter(x => x.columnId === props.id) ?? []
+  const onItemMoved = props._onItemMoved as (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
 
   return (
     <Box className="bg-gray-400 border-gray-500 shadow-lg border w-64 h-fit min-h-full flex flex-col">
-      <ColumnTitle key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onClick?.(id)} />
-      <ColumnContent>
-        {items.map(x => <Card id={x.id} title={x.title} detail={x.detail} position={x.position} key={x.id} />)}
+      <ColumnTitle key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onDoubleClick?.(id)} />
+      <ColumnContent columnId={props.id} onItemMoved={(cid, sid, tid) => onItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
+        {items.map(x =>
+
+          <Card id={x.id}
+            title={x.title}
+            detail={x.detail}
+            position={x.position}
+            key={x.id}
+            onDoubleClick={e => {
+              const handler = _onItemClicked as (id: Identity) => void
+              handler?.(e)
+            }}
+            _data={{ columnId: x.columnId }}
+          />
+
+        )}
       </ColumnContent>
     </Box>
   )
 }
+
 
