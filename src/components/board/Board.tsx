@@ -17,8 +17,22 @@ export type BoardProps = {
 
 export function Board(props: BoardProps) {
   const [isChanged, setChanged] = useState(false)
+
   const childItems = useMemo(() => (props.children === null) || (props.children === undefined) ? [] :
     Array.isArray(props.children) ? props.children : [props.children], [isChanged])
+
+  const data = useMemo(() => {
+    const set = new Set<Identity>()
+    const filtered: ItemData[] = []
+    props.data?.forEach(x => {
+      if (!set.has(x.id)) {
+        set.add(x.id)
+        filtered.push(x)
+      }
+    })
+    return filtered
+
+  }, [props.data])
 
   const isValid = childItems.every(x => isBoardColumn(x) || true)
   if (!isValid)
@@ -28,7 +42,7 @@ export function Board(props: BoardProps) {
     return childItems.map(x => {
       const newprops = {
         ...x.props,
-        _data: props.data,
+        _data: data,
         _onItemClicked: props.onDoubleClick,
         _onItemMoved: props.onItemMoved,
         _redraw: () => {
@@ -41,8 +55,8 @@ export function Board(props: BoardProps) {
 
 
   return (
-    <Box key={0} className="flex">
-      <Box key={1788} className="inline-flex col-gap-2 p-1 w-auto  h-80 bg-gray-200 ">
+    <Box key={0} className="flex flex-grow">
+      <Box key={1788} className="inline-flex col-gap-2 p-1 w-auto  min-h-80  bg-gray-200 ">
         {children}
       </Box>
     </Box>

@@ -24,7 +24,7 @@ export function ColumnTitle(props: ColumnTitleProps) {
   ]), [props.state])
 
   return (
-    <Box className={`bg-slate-300 ${stateColors.get(props.state ?? States.Black)} font-bold text-sm border border-gray-400`}>
+    <Box className={` ${stateColors.get(props.state ?? States.Black)} p-1 pl-2 text-left font-bold text-sm border bg-slate-300 border-gray-400`}>
       <div onDoubleClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -110,7 +110,7 @@ export function BoardColumn(props: ColumnProps) {
   const onItemMoved = props._onItemMoved as (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
 
   return (
-    <Box className="bg-gray-400 border-gray-500 shadow-lg border w-64 h-fit min-h-full flex flex-col">
+    <Box className="bg-gray-300 border-gray-500 shadow-lg border w-64 h-fit min-h-full flex flex-col">
       <ColumnTitle key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onDoubleClick?.(id)} />
       <ColumnContent columnId={props.id} onItemMoved={(cid, sid, tid) => onItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
         {items.map(x =>
