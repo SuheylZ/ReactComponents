@@ -12,6 +12,7 @@ export type ItemData = {
   detail: string
   tags?: Identity[]
   position: number
+  columnId: Identity
 }
 
 export type TagData = {
@@ -21,9 +22,9 @@ export type TagData = {
 }
 
 export interface IBoardData {
-  readonly columns: ReadonlyArray<Readonly<ColumnData>>
+  // readonly columns: ReadonlyArray<Readonly<ColumnData>>
   readonly items: ReadonlyArray<Readonly<ItemData>>
-  readonly tags: ReadonlyArray<Readonly<TagData>>
+  // readonly tags: ReadonlyArray<Readonly<TagData>>
 }
 
 export interface IBoardEvents {
@@ -35,4 +36,6 @@ export interface IBoardEvents {
   onItemClicked(item_id: Identity): void
   onColumnClicked(col_id: Identity): void
 }
+
+
 

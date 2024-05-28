@@ -3,7 +3,7 @@ import "../../core.css"
 import { Box } from "../Box"
 
 
-export type CardProps = ItemData & {
+export type CardProps = Omit<ItemData, "columnId"> & {
   onDoubleClick?: (id: Identity) => void
 }
 
@@ -52,7 +52,7 @@ export function Card(props: CardProps) {
         }}
         onDragEnd={(e) => {
           e.dataTransfer.effectAllowed = "none"
-          e.dataTransfer.dropEffect = "none"
+          e.dataTransfer.dropEffect = "copy"
         }}
       >
 

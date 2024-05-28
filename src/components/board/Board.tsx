@@ -10,27 +10,32 @@ export type BoardProps = {
 }
 
 export function Board(props: BoardProps) {
-  const { children } = props
-  const columnType = (<BoardColumn id={undefined} title={""} />).type
+
+  const columnType = (<BoardColumn id={undefined} title={""} _data={undefined} />).type
 
 
-  if (children) {
-    if (Array.isArray(children) && children.every(x => x.type === columnType)) {
-      const t0 = children.map(x => x.props as ColumnProps)
-      console.log(t0)
+  const children = (() => {
+    if (props.children) {
+      if (Array.isArray(props.children) && props.children.every(x => x.type === columnType)) {
+        return props.children.map(x => {
+          const newprops = { ...x.props, _data: props.data } as ColumnProps
+          return < BoardColumn key={newprops.id} {...newprops} />
+        })
+      }
+      else if (!Array.isArray(props.children) && (props.children?.type === columnType)) {
+        const newprops = { ...props, _data: props.data } as ColumnProps
+        return < BoardColumn key={newprops.id} {...newprops} />
+      }
+      else return props.children
     }
-    else if (!Array.isArray(children) && (children.type === columnType)) {
-      const t0 = children.props
-      console.log(t0)
-    }
-    else throw new Error("only BoardColumn is supported as children")
-  }
+    else return undefined
+  })()
 
 
   return (
-    <Box className="flex">
-      <Box className="inline-flex col-gap-2 p-1 w-auto  h-80 bg-gray-200 ">
-        {props.children}
+    <Box key={0} className="flex">
+      <Box key={1788} className="inline-flex col-gap-2 p-1 w-auto  h-80 bg-gray-200 ">
+        {children}
       </Box>
     </Box>
   )

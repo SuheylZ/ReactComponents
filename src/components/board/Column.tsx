@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { Box } from "../Box"
-import { CardProps } from "./Card"
-import { Identity } from "./interfaces"
+import { Card, CardProps } from "./Card"
+import { IBoardData, Identity } from "./interfaces"
 
 
 
@@ -41,7 +41,7 @@ export function ColumnContent(props: ColumnContentProps) {
   const [isDropped, setDropped] = useState(false)
 
   return (
-    <Box className={`w-full h-full min-h-max flex-grow ${isDropped ? "bg-blue-700" : " bg-yellow-300"} p-1`}
+    <Box className={`w-full h-full min-h-max flex-grow ${isDropped ? "bg-blue-700" : ""} p-1`}
       onDrop={(e) => {
         //const t0 = e.dataTransfer.getData("card")
         setDropped(true)
@@ -69,16 +69,19 @@ export type ColumnProps = {
   state?: States
   items?: CardProps[],
   onClick?: (id: Identity) => void
+  _data?: IBoardData | undefined
 }
 
 
 export function BoardColumn(props: ColumnProps) {
   const { id, title, onClick } = props
+  const items = props._data?.items?.filter(x => x.columnId === props.id) ?? []
 
   return (
     <Box className="bg-gray-400 border-gray-500 shadow-lg border w-64 h-fit min-h-full flex flex-col">
       <ColumnTitle key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onClick?.(id)} />
       <ColumnContent>
+        {items.map(x => <Card id={x.id} title={x.title} detail={x.detail} position={x.position} key={x.id} />)}
       </ColumnContent>
     </Box>
   )
