@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { Box } from "../Box"
 import { Card, CardProps } from "./Card"
-import { DragData, DragKey, IBoardData, Identity, ItemData } from "./interfaces"
+import { DragData, DragKey, Identity, ItemData } from "./interfaces"
 
 
 
