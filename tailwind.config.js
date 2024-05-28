@@ -1,10 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "src/**/*.tsx"
   ],
   theme: {
     extend: {},
+    fontSize: {
+      xss: ['9px', '10px']
+    }
   },
   plugins: [],
 }
