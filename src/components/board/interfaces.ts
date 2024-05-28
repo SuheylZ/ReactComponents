@@ -1,4 +1,4 @@
-export type Identity = number | string
+export type Identity = number | string | undefined
 
 export type ColumnData = {
   id: Identity
