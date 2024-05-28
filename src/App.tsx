@@ -6,7 +6,7 @@ function App() {
     <>    <BoardCard
       id={1}
       title='My Card Title'
-      position={0}
+      position={1}
       detail='this is the detail'
     />
       <br />
