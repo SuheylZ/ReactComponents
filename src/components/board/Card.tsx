@@ -1,6 +1,7 @@
-import { DragKey, Identity, ItemData } from "./interfaces"
+import { Identity, ItemData, setDragData } from "./interfaces"
 import "../../core.css"
 import { Box } from "../Box"
+import { useState } from "react"
 
 
 export type CardProps = Omit<ItemData, "columnId"> & {
@@ -44,23 +45,26 @@ function Tag(props: { tag: string }) {
 }
 
 export function Card(props: CardProps) {
+  const styles = "w-60 max-h-64 min-h-8 z-50 flex flex-col rounded-md shadow-lg border border-slate-300  bg-slate-200 shadow-slate-600"
   const { columnId } = props._data as { columnId: Identity }
+  const [dragging, setDragging] = useState(false)
 
   return (
-    <Box className="w-60 max-h-64 min-h-8 z-50 flex flex-col rounded-md shadow-lg border border-slate-300  bg-slate-200 shadow-slate-600">
+    <Box className={`${dragging ? styles.replace(/shadow-(\w|-|\d)+/i, "border-2 border-blue-800") : styles}`}>
 
       <div
         onDoubleClick={() => props.onDoubleClick?.(props.id)}
         draggable={true}
         onDragStart={(e) => {
-          const data = JSON.stringify({ cardId: props.id, columnId: columnId })
-          e.dataTransfer.setData(DragKey, data)
-          e.dataTransfer.effectAllowed = "linkMove"
+          setDragging(true)
+          setDragData(e, { cardId: props.id, columnId: columnId })
+          e.dataTransfer.effectAllowed = "move"
           e.dataTransfer.dropEffect = "move"
         }}
         onDragEnd={(e) => {
+          setDragging(false)
           e.dataTransfer.effectAllowed = "none"
-          e.dataTransfer.dropEffect = "copy"
+          e.dataTransfer.dropEffect = "none"
         }}
       >
 

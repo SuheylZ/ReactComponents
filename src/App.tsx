@@ -9,12 +9,13 @@ function App() {
   const data = input as ItemData[]
 
   return (
-    <Box className='flex h-96'>
+    <Box className='flex flex-1 h-[90vh] bg-transparent'>
 
       <Board data={data}
         onDoubleClick={id => alert(`${id} item clicked`)}
         onItemMoved={(id, _, tid) => {
           const idx = data.findIndex(x => x.id === id)
+          console.log(`item id: ${idx}`)
           if (idx < data.length)
             data[idx]!.columnId = tid
         }}>
