@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { Box } from "../Box"
 import { Card, CardProps } from "./Card"
-import { Identity, ItemData, getDragData } from "./interfaces"
+import { BoardDragKey, DragData, Identity, ItemData, useDataTransfer } from "./interfaces"
 
 export enum States {
   Red,
@@ -64,13 +64,14 @@ export function Content(props: ContentProps) {
   const [isDrag, setIsDrag] = useState(false)
   const highlight = () => setIsDrag(true)
   const stopHighlight = () => setIsDrag(false)
+  const [getData] = useDataTransfer<DragData>(BoardDragKey)
 
   return (
     <Box className={`w-full h-full flex-grow min-h-max p-1 space-y-2 ${(isDrag ? "border-2 border-blue-600" : "")}`}
       onDrop={(e) => {
         stopHighlight()
-        const data = getDragData(e)
-        if (data.columnId !== props.columnId) {
+        const data = getData(e)
+        if (!!data && data.columnId !== props.columnId) {
           props.onItemMoved?.(data.cardId, data.columnId, props.columnId)
           props.redraw?.()
         }
@@ -134,7 +135,7 @@ export function BoardColumn(props: ColumnProps) {
             id={x.id}
             title={x.title}
             detail={x.detail}
-            position={x.position}
+            position={x.position!}
             key={x.id}
             onDoubleClick={e => {
               const handler = _onItemClicked as (id: Identity) => void

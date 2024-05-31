@@ -1,7 +1,7 @@
-import { Identity, ItemData, setDragData } from "./interfaces"
+import { BoardDragKey, DragData, Identity, ItemData, useDataTransfer, useDragStatus } from "./interfaces"
 import "../../core.css"
 import { Box } from "../Box"
-import { useState } from "react"
+
 
 
 export type CardProps = Omit<ItemData, "columnId"> & {
@@ -47,34 +47,27 @@ function Tag(props: { tag: string }) {
 export function Card(props: CardProps) {
   const styles = "w-60 max-h-64 min-h-8 z-50 flex flex-col rounded-md shadow-lg border border-slate-300  bg-slate-200 shadow-slate-600"
   const { columnId } = props._data as { columnId: Identity }
-  const [dragging, setDragging] = useState(false)
+  const [isDragging, startDrag, stopDrag] = useDragStatus()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setData] = useDataTransfer<DragData>(BoardDragKey)
 
   return (
-    <Box className={`${dragging ? styles.replace(/shadow-(\w|-|\d)+/i, "border-2 border-blue-800") : styles}`}>
-
-      <div
-        onDoubleClick={() => props.onDoubleClick?.(props.id)}
+    <Box className={`${isDragging ? styles.replace(/shadow-(\w|-|\d)+/i, "border-2 border-blue-800") : styles}`}>
+      <div        
         draggable={true}
         onDragStart={(e) => {
-          setDragging(true)
-          setDragData(e, { cardId: props.id, columnId: columnId })
-          e.dataTransfer.effectAllowed = "move"
-          e.dataTransfer.dropEffect = "move"
+          startDrag(e)
+          setData(e, { cardId: props.id, columnId: columnId })
         }}
-        onDragEnd={(e) => {
-          setDragging(false)
-          e.dataTransfer.effectAllowed = "none"
-          e.dataTransfer.dropEffect = "none"
-        }}
+        onDragEnd={e => stopDrag(e)}
+        onDoubleClick={() => props.onDoubleClick?.(props.id)}
       >
-
         <Title title={props.title} />
         <Contents description={props.detail} />
         <TagPanel>
           <Tag tag="In Progress" />
         </TagPanel>
       </div>
-
     </Box>
   )
 }

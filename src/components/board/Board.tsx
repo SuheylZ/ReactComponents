@@ -8,12 +8,52 @@ import { Box } from "../Box"
 export type BoardProps = {
   data?: ItemData[]
   children?: JSX.Element | JSX.Element[]
-
   onDoubleClick?: (id: Identity) => void
   onItemMoved?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
   onItemArranged?: (cardId: Identity, position: number) => void
 }
 
+
+// function useBoard(props: BoardProps) {
+//   const [isChanged, setChanged] = useState(false)
+
+//   const childItems = (props.children === null) || (props.children === undefined) ? [] :
+//     Array.isArray(props.children) ? props.children : [props.children]
+
+//   const data = useMemo(() => {
+//     const set = new Set<Identity>()
+//     const filtered: ItemData[] = []
+//     props.data?.forEach(x => {
+//       if (!set.has(x.id)) {
+//         set.add(x.id)
+//         filtered.push(x)
+//       }
+//     })
+//     return filtered
+
+//   }, [props.data])
+
+//   const isValid = childItems.every(x => isBoardColumn(x) || true)
+//   if (!isValid)
+//     throw new Error("only BoardColumn can be added as a child element of Board")
+
+//   const children = useMemo(() => {
+//     return childItems.map(x => {
+//       const newprops = {
+//         ...x.props,
+//         _data: data,
+//         _onItemClicked: props.onDoubleClick,
+//         _onItemMoved: props.onItemMoved,
+//         _redraw: () => {
+//           setChanged(c => !c)
+//         }
+//       } as ColumnProps
+//       return <BoardColumn key={newprops.id} {...newprops} />
+//     })
+//   }, [props.children, isChanged])
+
+
+// }
 
 export function Board(props: BoardProps) {
   const [isChanged, setChanged] = useState(false)
