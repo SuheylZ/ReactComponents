@@ -61,7 +61,7 @@ export function BoardColumn(props: ColumnProps): JSX.Element {
   return (
     <div className="bg-gray-300 border-gray-00 shadow-lg border w-64 h-fit min-h-full flex flex-col rounded-lg">
       <Title key={`column-title-${id ?? title}`} id={id} title={title} onClick={() => onClick?.(id)} />
-      <Content columnId={props.id} onItemMoved={(cid, sid, tid) => handleItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
+      <Content columnId={props.id} onCardMove={(cid, sid, tid) => handleItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
         {items.map(x =>
 
           <Card
