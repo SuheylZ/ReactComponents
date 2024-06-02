@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { Box } from "../Box"
-import { Card, CardProps } from "./Card"
+import { Card, CardEvent, CardProps, CardSections } from "./Card"
 import { BoardDragKey, DragData, Identity, ItemData, useDataTransfer } from "./interfaces"
 
 export enum States {
@@ -22,7 +22,7 @@ export type TitleProps = {
   id: Identity,
   title?: string | undefined,
   state?: States
-  onDoubleClick?: (id: Identity) => void
+  onClick?: (id: Identity) => void
 }
 export function Title(props: TitleProps) {
 
@@ -39,10 +39,10 @@ export function Title(props: TitleProps) {
     <Box className={`p-1 pl-2 text-left font-bold text-sm border bg-slate-300 border-gray-200`}>
       <div
         className="flex flex-row gap-2 align-middle"
-        onDoubleClick={(e) => {
+        onClick={(e) => {
           e.preventDefault()
           e.stopPropagation()
-          props.onDoubleClick?.(props.id)
+          props.onClick?.(props.id)
         }}
       >
         <div className={`h-4 w-4 border-1 border-blue-500 ${stateColors.get(props.state ?? States.Black)}`}></div>
@@ -101,7 +101,7 @@ export type ColumnProps = {
   hint?: string
   state?: States
   items?: CardProps[],
-  onDoubleClick?: (id: Identity) => void
+  onClick?: (id: Identity) => void
 
   /**
    * Internal property-- DO NOT USE
@@ -120,15 +120,21 @@ export type ColumnProps = {
  */
   _redraw?: object
 }
-export function BoardColumn(props: ColumnProps) {
-  const { id, title, onDoubleClick, _onItemClicked, _redraw } = props
+export function BoardColumn(props: ColumnProps): JSX.Element {
+  const { id, title, onClick, _onItemClicked, _redraw } = props
   const items = (props._data as ItemData[])?.filter(x => x.columnId === props.id) ?? []
-  const onItemMoved = props._onItemMoved as (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
+  const handleItemMoved = props._onItemMoved as (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
+  const handleCardClicked: CardEvent = (c: Identity, s: CardSections, d?: object | string | number | boolean | Date) => {
+    if (_onItemClicked) {
+      const handler = _onItemClicked as CardEvent
+      handler(c, s, d)
+    }
+  }
 
   return (
-    <Box className="bg-gray-300 border-gray-00 shadow-lg border w-64 h-fit min-h-full flex flex-col rounded-lg">
-      <Title key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onDoubleClick={() => onDoubleClick?.(id)} />
-      <Content columnId={props.id} onItemMoved={(cid, sid, tid) => onItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
+    <div className="bg-gray-300 border-gray-00 shadow-lg border w-64 h-fit min-h-full flex flex-col rounded-lg">
+      <Title key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onClick={() => onClick?.(id)} />
+      <Content columnId={props.id} onItemMoved={(cid, sid, tid) => handleItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
         {items.map(x =>
 
           <Card
@@ -137,16 +143,13 @@ export function BoardColumn(props: ColumnProps) {
             detail={x.detail}
             position={x.position!}
             key={x.id}
-            onDoubleClick={e => {
-              const handler = _onItemClicked as (id: Identity) => void
-              handler?.(e)
-            }}
+            onClick={handleCardClicked}
             _data={{ columnId: x.columnId }}
           />
 
         )}
       </Content>
-    </Box>
+    </div>
   )
 }
 

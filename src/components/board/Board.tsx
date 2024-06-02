@@ -3,14 +3,15 @@ import { useMemo, useState } from "react"
 import { BoardColumn, ColumnProps, isBoardColumn } from "./Column"
 import { Identity, ItemData } from "./interfaces"
 import { Box } from "../Box"
+import { CardSections } from "./Card/Card"
 
 
 export type BoardProps = {
   data?: ItemData[]
   children?: JSX.Element | JSX.Element[]
-  onDoubleClick?: (id: Identity) => void
-  onItemMoved?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
-  onItemArranged?: (cardId: Identity, position: number) => void
+  onCardClick?: (id: Identity, section: CardSections, data?: object | string | number | boolean | Date) => void
+  onCardMove?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
+  onCardRearrange?: (cardId: Identity, position: number) => void
 }
 
 
@@ -83,15 +84,15 @@ export function Board(props: BoardProps) {
       const newprops = {
         ...x.props,
         _data: data,
-        _onItemClicked: props.onDoubleClick,
-        _onItemMoved: props.onItemMoved,
+        _onItemClicked: props.onCardClick,
+        _onItemMoved: props.onCardMove,
         _redraw: () => {
           setChanged(c => !c)
         }
       } as ColumnProps
       return <BoardColumn key={newprops.id} {...newprops} />
     })
-  }, [props.children, isChanged])
+  }, [props, isChanged])
 
 
   return (

@@ -34,7 +34,8 @@ export function Box(props: BoxProps) {
 
   return (
 
-    <div className={props.className}
+    <div
+      className={props.className}
       onDragOver={onDragOver}
       onDrop={onDrop}
       onDropCapture={e => {
@@ -56,6 +57,5 @@ export function Box(props: BoxProps) {
     >
       {props.children}
     </div>
-
   )
 }
