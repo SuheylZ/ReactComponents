@@ -26,10 +26,8 @@ export type ColumnProps = {
   id: Identity
   title?: string
   hint?: string
-  state?: States
   items?: CardProps[],
   onClick?: (id: Identity) => void
-
   /**
    * Internal property-- DO NOT USE
    */
@@ -47,6 +45,8 @@ export type ColumnProps = {
  */
   _redraw?: object
 }
+
+
 export function BoardColumn(props: ColumnProps): JSX.Element {
   const { id, title, onClick, _onItemClicked, _redraw } = props
   const items = (props._data as ItemData[])?.filter(x => x.columnId === props.id) ?? []
@@ -60,7 +60,7 @@ export function BoardColumn(props: ColumnProps): JSX.Element {
 
   return (
     <div className="bg-gray-300 border-gray-00 shadow-lg border w-64 h-fit min-h-full flex flex-col rounded-lg">
-      <Title key={`column-title-${id ?? title}`} id={id} title={title} state={props.state ?? States.Black} onClick={() => onClick?.(id)} />
+      <Title key={`column-title-${id ?? title}`} id={id} title={title} onClick={() => onClick?.(id)} />
       <Content columnId={props.id} onItemMoved={(cid, sid, tid) => handleItemMoved?.(cid, sid, tid)} redraw={_redraw as () => void}>
         {items.map(x =>
 
