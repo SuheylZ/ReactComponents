@@ -1,8 +1,7 @@
 
 import { useMemo, useState } from "react"
-import { BoardColumn, ColumnProps, isBoardColumn } from "./Column"
+import { BoardColumn, ColumnProps, isBoardColumn } from "./Column/Column"
 import { Identity, ItemData } from "./interfaces"
-import { Box } from "../Box"
 import { CardSections } from "./Card/Card"
 
 
@@ -96,10 +95,10 @@ export function Board(props: BoardProps) {
 
 
   return (
-    <Box key={0} className="flex flex-grow">
-      <Box key={1788} className="inline-flex col-gap-2 p-1 w-auto  min-h-80  bg-gray-200 ">
+    <div key={0} className="flex flex-grow">
+      <div key={1788} className="inline-flex col-gap-2 p-1 w-auto  min-h-80  bg-gray-200 ">
         {children}
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }

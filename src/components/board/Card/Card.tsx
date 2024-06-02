@@ -1,6 +1,5 @@
 import { BoardDragKey, DragData, Identity, ItemData, useDataTransfer, useDragStatus } from "../interfaces"
 import "../../../core.css"
-import { Box } from "../../Box"
 import { Tag } from "./Tag"
 import { Title } from "./Title"
 import { Contents } from "./Content"
@@ -29,7 +28,7 @@ export function Card(props: CardProps) {
   const handleCardClicked = () => props.onClick?.(props.id, "card")
 
   return (
-    <Box className={`${isDragging ? styles.replace(/shadow-(\w|-|\d)+/i, "border-2 border-blue-800") : styles}`}>
+    <div className={`${isDragging ? styles.replace(/shadow-(\w|-|\d)+/i, "border-2 border-blue-800") : styles}`}>
       <div
         draggable={true}
         onDragStart={(e) => {
@@ -44,6 +43,6 @@ export function Card(props: CardProps) {
           <Tag tag="In Progress" onClick={handleTagClicked} />
         </div>
       </div>
-    </Box>
+    </div>
   )
 }
