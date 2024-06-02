@@ -14,69 +14,28 @@ export type BoardProps = {
 }
 
 
-// function useBoard(props: BoardProps) {
-//   const [isChanged, setChanged] = useState(false)
-
-//   const childItems = (props.children === null) || (props.children === undefined) ? [] :
-//     Array.isArray(props.children) ? props.children : [props.children]
-
-//   const data = useMemo(() => {
-//     const set = new Set<Identity>()
-//     const filtered: ItemData[] = []
-//     props.data?.forEach(x => {
-//       if (!set.has(x.id)) {
-//         set.add(x.id)
-//         filtered.push(x)
-//       }
-//     })
-//     return filtered
-
-//   }, [props.data])
-
-//   const isValid = childItems.every(x => isBoardColumn(x) || true)
-//   if (!isValid)
-//     throw new Error("only BoardColumn can be added as a child element of Board")
-
-//   const children = useMemo(() => {
-//     return childItems.map(x => {
-//       const newprops = {
-//         ...x.props,
-//         _data: data,
-//         _onItemClicked: props.onDoubleClick,
-//         _onItemMoved: props.onItemMoved,
-//         _redraw: () => {
-//           setChanged(c => !c)
-//         }
-//       } as ColumnProps
-//       return <BoardColumn key={newprops.id} {...newprops} />
-//     })
-//   }, [props.children, isChanged])
-
-
-// }
-
-export function Board(props: BoardProps) {
+function useBoard(props: BoardProps) {
   const [isChanged, setChanged] = useState(false)
 
-  const childItems = useMemo(() => (props.children === null) || (props.children === undefined) ? [] :
-    Array.isArray(props.children) ? props.children : [props.children], [isChanged])
-
-  const data = useMemo(() => {
-    const set = new Set<Identity>()
-    const filtered: ItemData[] = []
-    props.data?.forEach(x => {
-      if (!set.has(x.id)) {
-        set.add(x.id)
-        filtered.push(x)
-      }
-    })
-    return filtered
-
-  }, [props.data])
+  const childItems = (props.children === null) || (props.children === undefined) ? [] :
+    Array.isArray(props.children) ? props.children : [props.children]
 
   const isValid = childItems.every(x => isBoardColumn(x) || true)
   if (!isValid)
     throw new Error("only BoardColumn can be added as a child element of Board")
+
+  const data = useMemo(() => {
+    const set = new Set<Identity>()
+    const uniqueItems: ItemData[] = []
+    props.data?.forEach(x => {
+      if (!set.has(x.id)) {
+        set.add(x.id)
+        uniqueItems.push(x)
+      }
+    })
+    return uniqueItems
+
+  }, [props.data])
 
   const children = useMemo(() => {
     return childItems.map(x => {
@@ -91,8 +50,13 @@ export function Board(props: BoardProps) {
       } as ColumnProps
       return <BoardColumn key={newprops.id} {...newprops} />
     })
-  }, [props, isChanged])
+  }, [props.children, isChanged])
 
+  return children
+}
+
+export function Board(props: BoardProps) {
+  const children = useBoard(props)
 
   return (
     <div key={0} className="flex flex-grow">
