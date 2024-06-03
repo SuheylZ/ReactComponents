@@ -1,5 +1,5 @@
 import './App.css'
-import { Board, BoardColumn, Identity, ItemData, CardEvent } from './components/board'
+import { Board, BoardColumn, Identity, ItemData, CardEvent } from './components/Board'
 import input from "./data/cards.json"
 
 

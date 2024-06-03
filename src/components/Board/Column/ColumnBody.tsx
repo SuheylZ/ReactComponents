@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Identity, useDataTransfer, DragData, BoardDragKey } from "../interfaces"
+import { Identity, useDataTransfer, DragData, BoardDragKey } from "../hooks"
 
 export type ColumnBodyProps = {
   children?: JSX.Element | JSX.Element[],

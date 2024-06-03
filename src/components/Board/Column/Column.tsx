@@ -1,6 +1,7 @@
 
 import { Card, CardProps } from "../Card"
-import { CardSections, Identity, useGridData } from "../interfaces"
+import { useGridData } from "../GridContext"
+import { CardSections, Identity } from "../hooks"
 import { ColumnBody } from "./ColumnBody"
 import { ColumnTitle } from "./ColumnTitle"
 

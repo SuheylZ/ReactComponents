@@ -1,4 +1,4 @@
-import { BoardDragKey, CardEvent, DragData, Identity, ItemData, useDataTransfer, useDragStatus } from "../interfaces"
+import { BoardDragKey, CardEvent, DragData, Identity, ItemData, useDataTransfer, useDragStatus } from "../hooks"
 import "../../../core.css"
 import { CardTag } from "./CardTag"
 import { CardTitle } from "./CardTitle"

@@ -1,5 +1,5 @@
 
-import { Identity } from "../interfaces"
+import { Identity } from "../hooks"
 
 export type ColumnTitleProps = {
   id: Identity,

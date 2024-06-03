@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { useState } from "react"
 
 export type Identity = number | string | undefined
 
@@ -10,6 +10,13 @@ export type ItemData = {
   position?: number
   columnId: Identity
 }
+
+export type CardSections = "card" | "tag" | "title" | "detail"
+export type CardEvent = (
+  id: Identity,
+  section: CardSections,
+  data?: object | number | string | boolean | Date
+) => void
 
 /**
  * ===================================================
@@ -58,30 +65,4 @@ export function useDragStatus(): [
 
   return [isDragging, startDragging, stopDragging]
 }
-
-/**
- * ===================================================
- *  GRID CONTEXT
- *  to pass data from Board to Columns
- */
-export type CardSections = "card" | "tag" | "title" | "detail"
-export type CardEvent = (
-  id: Identity,
-  section: CardSections,
-  data?: object | number | string | boolean | Date
-) => void
-
-export type GridData = {
-  events: {
-    onCardClick?: CardEvent | undefined
-    onCardMove?:
-      | ((cardId: Identity, sourceId?: Identity, targetId?: Identity) => void)
-      | undefined
-    onRedraw?: () => void
-  }
-  data: ItemData[]
-}
-const GridContext = createContext<GridData>({} as GridData)
-export const GridDataProvider = GridContext.Provider
-export const useGridData = () => useContext(GridContext)
 
