@@ -1,4 +1,7 @@
 export * from "./Card.tsx"
-export * from "./Content.tsx"
-export * from "./Title"
-export * from "./Tag.tsx"
+export * from "./CardBody.tsx"
+export * from "./CardTitle.tsx"
+export * from "./CardTag.tsx"
+
+
+

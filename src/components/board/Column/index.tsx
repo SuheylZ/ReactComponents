@@ -1,3 +1,3 @@
 export * from "./Column"
-export * from "./Content"
-export * from "./Title"
+export * from "./ColumnBody"
+export * from "./ColumnTitle"

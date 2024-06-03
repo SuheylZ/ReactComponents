@@ -1,13 +1,13 @@
 import { useState } from "react"
 import { Identity, useDataTransfer, DragData, BoardDragKey } from "../interfaces"
 
-export type ContentProps = {
+export type ColumnBodyProps = {
   children?: JSX.Element | JSX.Element[],
   columnId: Identity
   onCardMove?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void
   redraw?: () => void
 }
-export function Content(props: ContentProps) {
+export function ColumnBody(props: ColumnBodyProps) {
   const { children } = props
   const [isDrag, setIsDrag] = useState(false)
   const highlight = () => setIsDrag(true)

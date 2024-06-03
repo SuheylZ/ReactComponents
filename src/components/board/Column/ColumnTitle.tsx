@@ -1,13 +1,12 @@
 
 import { Identity } from "../interfaces"
 
-export type TitleProps = {
+export type ColumnTitleProps = {
   id: Identity,
   title?: string | undefined,
-  // state?: States
   onClick?: (id: Identity) => void
 }
-export function Title(props: TitleProps) {
+export function ColumnTitle(props: ColumnTitleProps) {
 
   return (
     <div className={`p-1 pl-2 text-left font-bold text-sm border bg-slate-300 border-gray-200`}>

@@ -1,6 +1,5 @@
 import './App.css'
-import { Board, BoardColumn, Identity, ItemData } from './components/board'
-import { CardEvent } from './components/board/Card'
+import { Board, BoardColumn, Identity, ItemData, CardEvent } from './components/board'
 import input from "./data/cards.json"
 
 
@@ -8,7 +7,7 @@ function App() {
   const data = input as ItemData[]
 
   const handleColumnClick = (id: Identity) => alert(`column ${id} clicked`)
-  const handleCardClick: CardEvent = (id, section, data) => console.log(`item:${id}, section:${section} ${data ? data : ""}`)
+  const handleCardClick: CardEvent = (id, section, data) => alert(`card:${id}, section:${section} data:${data ? data : "null"}`)
   const handleCardMove = (cardId: Identity, _fromId: Identity, toId: Identity) => {
     const idx = data.findIndex(x => x.id === cardId)
     data[idx]!.columnId = toId
