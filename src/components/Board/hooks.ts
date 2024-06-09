@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export type Identity = number | string | undefined
 
-export type ItemData = {
+export type CardData = {
   id: Identity
   title: string
   detail: string
@@ -65,4 +65,5 @@ export function useDragStatus(): [
 
   return [isDragging, startDragging, stopDragging]
 }
+
 

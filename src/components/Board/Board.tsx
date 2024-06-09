@@ -1,12 +1,12 @@
 
 import { useState } from "react"
-import { CardEvent, Identity, ItemData } from "./hooks"
+import { CardEvent, Identity, CardData } from "./hooks"
 import { useBoard } from "./useBoard"
 import { GridData, GridDataProvider } from "./GridContext"
 
 
 export type BoardProps = {
-  data?: ItemData[]
+  data?: CardData[]
   children?: JSX.Element | JSX.Element[]
   onCardClick?: CardEvent
   onCardMove?: (cardId: Identity, sourceId?: Identity, targetId?: Identity) => void

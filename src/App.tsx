@@ -1,10 +1,10 @@
 import './App.css'
-import { Board, BoardColumn, Identity, ItemData, CardEvent } from './components'
+import { Board, BoardColumn, Identity, CardData, CardEvent } from './components'
 import input from "./data/cards.json"
 
 
 function App() {
-  const data = input as ItemData[]
+  const data = input as CardData[]
 
   const handleColumnClick = (id: Identity) => alert(`column ${id} clicked`)
   const handleCardClick: CardEvent = (id, section, data) => alert(`card:${id}, section:${section} data:${data ? data : "null"}`)

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react"
-import { CardEvent, Identity, ItemData } from "./hooks"
+import { CardEvent, Identity, CardData } from "./hooks"
 
 /**
  * ===================================================
@@ -15,9 +15,10 @@ export type GridData = {
       | undefined
     onRedraw?: () => void
   }
-  data: ItemData[]
+  data: CardData[]
 }
 const GridContext = createContext<GridData>({} as GridData)
 export const GridDataProvider = GridContext.Provider
 export const useGridData = () => useContext(GridContext)
+
 

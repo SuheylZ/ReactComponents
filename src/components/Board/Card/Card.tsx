@@ -1,11 +1,11 @@
-import { BoardDragKey, CardEvent, DragData, Identity, ItemData, useDataTransfer, useDragStatus } from "../hooks"
+import { BoardDragKey, CardEvent, DragData, Identity, CardData, useDataTransfer, useDragStatus } from "../hooks"
 import "../../../core.css"
 import { CardTag } from "./CardTag"
 import { CardTitle } from "./CardTitle"
 import { CardBody } from "./CardBody"
 
 
-export type CardProps = Omit<ItemData, "columnId"> & {
+export type CardProps = Omit<CardData, "columnId"> & {
   onClick?: CardEvent
   columnId?: Identity
 }

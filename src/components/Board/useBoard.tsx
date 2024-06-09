@@ -1,14 +1,14 @@
 import { useMemo } from "react"
 import { BoardColumn, ColumnProps, isBoardColumn } from "./Column/Column"
-import { Identity, ItemData } from "./hooks"
+import { Identity, CardData } from "./hooks"
 
 
 
-export function useBoard(data: ItemData[], children?: JSX.Element | JSX.Element[]): [JSX.Element[], ItemData[]] {
+export function useBoard(data: CardData[], children?: JSX.Element | JSX.Element[]): [JSX.Element[], CardData[]] {
 
   const dataOptimized = useMemo(() => {
     const set = new Set<Identity>()
-    const uniqueItems: ItemData[] = []
+    const uniqueItems: CardData[] = []
     data?.forEach(x => {
       if (!set.has(x.id)) {
         set.add(x.id)
